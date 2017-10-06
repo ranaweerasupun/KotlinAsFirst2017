@@ -307,34 +307,40 @@ fun squareSequenceDigit(n: Int): Int {
         if (n==2) return 4
         if (n==3) return 9
     }
-    var i = 3
-    var c = 3
-    var t: Int = 0
-    var t2:Int = 0
-    var rt:Int = 0
-    var x: Int = 0
+    val n1 = n.toDouble()
+    var i = 3.0
+    var c = 3.0
+    var t:Double  = 0.0
+    var t2:Double = 0.0
+    var rt:Double = 0.0
+    var x:Double = 0.0
+    var xi = x.toInt()
+    var t2i = t2.toInt()
 
-   bottle@ while (rt != 1) {
+   bottle@ while (rt != 1.0) {
         i++
         t = i * i
         t2 = (t * 10) + 1
-        rt = revert(t2)
-        ant@ while (rt >= 10){
-        x = rt % 10
+        t2i = t2.toInt()
+        rt = revert(t2i).toDouble()
+        ant@ while (rt >= 10.0){
+        x = rt % 10.0
         ++c
-        if (c == n) {break@bottle
+        if (c == n1) {
+            xi = x.toInt()
+            break@bottle
         }
-        rt /= 10
-        if (rt >= 10){
+        rt /= 10.0
+        if (rt >= 10.0){
             continue@ant
         }
-        if (rt == 1) {
-            rt = 0
+        if (rt == 1.0) {
+            rt = 0.0
             continue@bottle
         }
         }
    }
-    return x
+    return xi
 }
 
 
