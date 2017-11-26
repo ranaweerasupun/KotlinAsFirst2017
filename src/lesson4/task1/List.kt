@@ -2,6 +2,10 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import sun.invoke.empty.Empty
+import java.lang.Math.pow
+import java.lang.Math.sqrt
 
 /**
  * Пример
@@ -106,14 +110,29 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    val coefficientsList = v.map { sqr(it) }
+    val sumCoefficients = coefficientsList.sum()
+    return sqrt(sumCoefficients)
+
+
+
+
+}
+
 
 /**
  * Простая
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    if(list.isEmpty()) return 0.0
+    val sumOfterms = list.sum()
+    return (sumOfterms / list.size)
+
+
+}
 
 /**
  * Средняя
@@ -123,7 +142,23 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    val mean = mean(list)
+    var element:Double
+    if(list is Empty){ return list }
+
+    for (i in 0 until list.size){
+        element = list[i] - mean
+        list[i] = element
+
+
+    }
+
+
+return list
+
+
+}
 
 /**
  * Средняя
@@ -132,7 +167,20 @@ fun center(list: MutableList<Double>): MutableList<Double> = TODO()
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.0.
  */
-fun times(a: List<Double>, b: List<Double>): Double = TODO()
+fun times(a: List<Double>, b: List<Double>): Double {
+    if (a.isEmpty() && b.isEmpty()) return 0.0
+    val listofMultipies = mutableListOf<Double>()
+
+    for (i in 0..a.size-1 ){
+        listofMultipies.add(a[i] * b[i])
+
+
+
+    }
+
+    return listofMultipies.sum()
+
+}
 
 /**
  * Средняя
@@ -142,7 +190,20 @@ fun times(a: List<Double>, b: List<Double>): Double = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0.0 при любом x.
  */
-fun polynom(p: List<Double>, x: Double): Double = TODO()
+fun polynom(p: List<Double>, x: Double): Double {
+    val setofTerms = mutableListOf<Double>()
+    for(i in 0..p.size-1){
+        val newElement = p[i] * pow(x,i.toDouble())
+        setofTerms.add(newElement)
+
+
+    }
+
+
+return setofTerms.sum()
+
+
+}
 
 /**
  * Средняя
@@ -154,7 +215,20 @@ fun polynom(p: List<Double>, x: Double): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Double>): MutableList<Double> = TODO()
+fun accumulate(list: MutableList<Double>): MutableList<Double> {
+    for (i in 0 until list.size-1){
+        val elementi = list[i] + list[i+1]
+        list[i+1] = elementi
+
+
+
+    }
+
+
+return list
+
+
+}
 
 /**
  * Средняя
@@ -180,7 +254,42 @@ fun factorizeToString(n: Int): String = TODO()
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    var m = n
+    val listDigits = mutableListOf<Int>()
+    val listDigits2 = mutableListOf<Int>()
+    if (n < base) {
+        listDigits.add(n)
+        return listDigits
+
+
+    }else {
+
+
+        while (m >= base) {
+            val digit = m % base
+            listDigits.add(digit)
+
+            m /= base
+
+        }
+        listDigits.add(m)
+    }
+
+
+    for (i in 0 until listDigits.size){
+        val element = listDigits[listDigits.size-1-i]
+        listDigits2.add(element)
+
+
+    }
+
+
+
+    return listDigits2
+
+
+}
 
 /**
  * Сложная
@@ -190,7 +299,34 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    val alphabet = mutableListOf<String>()
+    val value = mutableListOf<String>()
+    val ABCD = listOf("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z")
+    val IntABCD = listOf(10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37)
+    var m = n
+    while (m != 0) {
+        val element = m % base
+        if( element < 10){
+            value.add(element.toString())
+
+
+        }else
+        value.add(ABCD[IntABCD.indexOf(element)])
+
+        m /= base
+
+
+    }
+    for(i in 0 until value.size){
+        val eleList1 = value[value.size-1-i]
+        alphabet.add(eleList1)
+
+    }
+
+
+    return alphabet.joinToString(separator = "",prefix = "",postfix = "")  //using jointoString
+}
 
 /**
  * Средняя
@@ -199,7 +335,21 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    val listofValues = mutableListOf<Int>()
+    for (i in 0 until digits.size){
+        val element = digits[i]
+        val values = (element * pow(base.toDouble(),digits.size.toDouble()-1-i)).toInt()
+        listofValues.add(values)
+
+
+    }
+
+
+    return  listofValues.sum()
+
+
+}
 
 /**
  * Сложная
@@ -210,7 +360,31 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    val ABCD = listOf("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z")
+    val IntABCD = listOf(10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37)
+    val Int123 = listOf(1,2,3,4,5,6,7,8,9,0)
+    val string123 = listOf("1","2","3","4","5","6","7","8","9","0")
+    val number = mutableListOf<Int>()
+    for (i in 0 until str.length){
+        val character =(str[str.length-1-i]).toString()
+        if (character in ABCD){
+           val value = IntABCD[ABCD.indexOf(character)] *( pow(base.toDouble(), i.toDouble())).toInt()
+            number.add(value)
+        }
+        else if (character in string123 ){
+            val value = Int123[string123.indexOf(character)] * ( pow(base.toDouble(), i.toDouble())).toInt()
+            number.add(value)
+
+        }
+
+
+    }
+
+return number.sum()
+
+
+}
 
 /**
  * Сложная
@@ -220,7 +394,42 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String  {
+    val listofAll = mutableListOf<String>()
+    val listofDigits = mutableListOf<String>()
+    val mainList = listOf<String>("I","IV","V","IX","X","XL","L","XC","C","CD","D","CM","M")
+    val subList = listOf<String>("II","III","VI","VII","VIII","XX","XXX","LX","LXX","LXXX","CC","CCC","DC","DCC","DCCC","MM","MMM")
+    val IntmainList = listOf<Int>(1,4,5,9,10,40,50,90,100,400,500,900,1000)
+    val IntsubList = listOf<Int>(2,3,6,7,8,20,30,60,70,80,200,300,600,700,800,2000,3000)
+    var m = n
+    while (m != 0){
+        var p = 10
+        val value = m % p
+        if (value in IntmainList){
+            listofAll.add(mainList[IntmainList.indexOf(value)])
+
+        }else if(value in IntsubList){
+            listofAll.add(subList[IntsubList.indexOf(value)])
+
+
+        }
+        m -= value
+        p *= 10
+
+
+
+    }
+    for (i in 0 until listofAll.size){
+        val digit = listofAll[listofAll.size-1-i]
+        listofDigits.add(digit)
+    }
+
+
+
+return listofDigits.joinToString(separator = "",prefix = "",postfix = "")   //using jointoString
+
+
+}
 
 /**
  * Очень сложная
@@ -230,3 +439,23 @@ fun roman(n: Int): String = TODO()
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String = TODO()
+
+
+fun main (arg: Array<String>){
+    val b = sqRoots(25.0)
+    println("$b")
+    val d = biRoots(1.0,5.0,6.0)
+    println("$d")
+   val v = negativeList(listOf(1,-5,4))
+    println("$v")
+    val f = invertPositives(mutableListOf(10,-6,5))
+    println("$f")
+    val roma = roman(645)
+    println("$roma")
+
+
+
+
+
+
+}
