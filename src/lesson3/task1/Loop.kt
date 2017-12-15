@@ -68,13 +68,13 @@ fun digitNumber(n: Int): Int {
     var count = 1
     var x = n / 10
     while ( x >= 1 || x <= -1){
-        count += 1
+        count ++
         x /= 10
 
 
     }
 
-return count
+return count  //format?
 }
 
 //fun pow(m: Int): Int {}
@@ -86,14 +86,14 @@ return count
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int  {
-    var i :Int = 3
-    var n2:Int = 1
-    var n1:Int = 1
+    var i  = 3
+    var n2 = 1
+    var n1 = 1
     if (n < 2) return 1
 
     while(i <= n ){
-       var n3:Int;
-        n3 = n1 + n2
+
+        val n3 = n1 + n2
         n1 = n2
         n2 = n3
         i++
@@ -101,7 +101,7 @@ fun fib(n: Int): Int  {
     }
 
 
-return n2
+return n2   //format?
 
 }
 
@@ -115,11 +115,12 @@ fun lcm(m: Int, n: Int): Int {
         val mn = m * n
         var m:Int = m
         var n:Int = n
-        var q1:Int;
-        var q2:Int;
-        var r1:Int;
-        var r2:Int;
-        if (m > n) {
+        var q1:Int
+    var q2:Int
+    var r1:Int
+    var r2:Int
+    when {
+        m > n -> {
             while(n > 0){
                 q1 = m / n
                 r1 = m - q1 * n
@@ -128,12 +129,12 @@ fun lcm(m: Int, n: Int): Int {
                 n = r1
 
 
-
             }
             return mn / m
 
 
-        } else if (n > m){
+        }
+        n > m -> {
             while(m > 0){
                 q2 = n / m
                 r2 = n - q2 * m
@@ -142,12 +143,13 @@ fun lcm(m: Int, n: Int): Int {
                 m = r2
 
 
-
             }
             return mn / n
 
 
-        } else return m
+        }
+        else -> return m
+    }
     }
 /**
  * Простая
@@ -155,16 +157,14 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var r:Int =2
-    var t:Int;
+    var r =2
     while (r <= n){
-        t = n % r
-        if (t != 0) r++ else break
+        if (n % r != 0) r++ else break
 
 
     }
 
-  return r
+  return r //format?
 
 }
 
@@ -192,7 +192,7 @@ fun maxDivisor(n: Int): Int  {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
- var k = (m*n)/lcm(m,n)
+ val k = (m*n)/lcm(m,n)
     return k==1
 
 }
@@ -208,7 +208,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
   var k = 1
     for(i in m..n )
     {
-        var t = (Math.sqrt(i.toDouble()) ).toInt()
+        val t = (Math.sqrt(i.toDouble()) ).toInt()
         if ( t*t==i) return true
         else k = 1
     }
@@ -241,13 +241,13 @@ fun cos(x: Double, eps: Double): Double = TODO()
  */
 fun revert(n: Int): Int {
         var t1: Int = n
-        var t2: Int;
-        var t3: Int;
+        var t2: Int
+        var t3: Int
     t3 = 0
     while (t1 != 0){
         t2 = t1 % 10
         t3 = (t3 * 10)+t2
-        t1 = t1 / 10
+        t1 /= 10
 
 
 
@@ -370,31 +370,33 @@ fun fibSequenceDigit(n: Int): Int {
     }
 
 
-    var x: Int = 0
-    var x2 = 0
-    var rx: Int = 0
+    var x: Double = 0.0
+    var x2 = 0.0
+    var rx: Double = 0.0
     var c = 6
-    var a: Int = 5
-    var b: Int = 8
-    var y = 0
+    var a: Double = 5.0
+    var b: Double = 8.0
+    var y = 0.0
+    var yi = y.toInt()
+    var x2i = x2.toInt()
 
 
-    ball@ while (rx != 1) {
+    ball@ while (rx != 1.0) {
 
         x = a + b
-        x2 = (x * 10) + 1
-        rx = revert(x2)
-        bat@ while (rx >= 10) {
-            y = rx % 10
+        x2 = (x * 10.0) + 1.0
+        rx = revert(x2i).toDouble()
+        bat@ while (rx >= 10.0) {
+            y = rx % 10.0
             c++
             if (c == n) break@ball
-            rx /= 10
-            if (rx >= 10) {
+            rx /= 10.0
+            if (rx >= 10.0) {
                 continue@bat
 
             }
-            if (rx == 1) {
-                rx = 0
+            if (rx == 1.0) {
+                rx = 0.0
                 a = b
                 b = x
                 continue@ball
@@ -403,7 +405,7 @@ fun fibSequenceDigit(n: Int): Int {
         }
 
     }
- return y
+ return yi
 }
 
 fun main (arg: Array<String>){
