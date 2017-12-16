@@ -112,6 +112,17 @@ return n2   //format?
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
+    var changed_m = m
+    var changed_n = n
+    while (maxOf(changed_m, changed_n) % minOf(changed_m, changed_n) != 0) {
+        if (changed_n < changed_m){ changed_m %= changed_n}
+        else {changed_n %= changed_m}
+    }
+    return m * n /minOf(changed_m, changed_n)
+}
+
+
+/*{
         val mn = m * n
         var m:Int = m
         var n:Int = n
@@ -151,6 +162,7 @@ fun lcm(m: Int, n: Int): Int {
         else -> return m
     }
     }
+   */
 /**
  * Простая
  *
@@ -222,7 +234,22 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double  {
+    var changed_x = x % (Math.PI * 2)
+    val increase = pow(changed_x,2.0)
+    var t = 1
+    var term = changed_x
+    var sinValue = term
+
+    while (Math.abs(term) >= eps) {
+        changed_x *= increase
+        term = pow(-1.0, (t % 2).toDouble()) * changed_x / factorial(2 * t + 1)
+        sinValue += term
+        t ++
+    }
+    return sinValue
+}
+
 
 /**
  * Средняя
@@ -231,7 +258,24 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double  {
+    var changed_x = x % (Math.PI * 2)
+    val increase = pow(changed_x,2.0)
+    var t = 1
+    var term = 1.0
+    var cosValue = term
+    changed_x *= changed_x
+    while (Math.abs(term) >= eps) {
+        term = pow(-1.0, (t % 2).toDouble()) * changed_x / factorial(2 * t)
+        cosValue += term
+        changed_x *= increase
+        t++
+    }
+    return cosValue
+}
+
+
+
 
 /**
  * Средняя
@@ -280,11 +324,11 @@ return false
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var r = n
-    var t:Int;
+    var t:Int
     val p = r % 10
     while (r > 1){
         t = r % 10
-        r = r / 10
+        r /= 10
         if (p == t) continue else return true
 
 
@@ -301,7 +345,22 @@ return false
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-fun squareSequenceDigit(n: Int): Int {
+fun squareSequenceDigit(n: Int): Int  {
+    var number = 0
+    for (i in 1..n) {
+        val lenghtOfterm = (i * i).toString().length
+        number += lenghtOfterm
+        if (number >= n){
+
+            return i * i / pow(10.0, (number - n).toDouble()).toInt() % 10
+
+        }
+    }
+    return -1
+}
+
+
+/*{
     if (n < 4) {
         if (n==1) return 1
         if (n==2) return 4
@@ -342,7 +401,7 @@ fun squareSequenceDigit(n: Int): Int {
    }
     return xi
 }
-
+*/
 
 /**
  * Сложная
@@ -351,7 +410,23 @@ fun squareSequenceDigit(n: Int): Int {
  * 1123581321345589144...
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
-fun fibSequenceDigit(n: Int): Int {
+fun fibSequenceDigit(n: Int): Int  {
+    var number = 0
+    for (i in 1..n) {
+        val lenghtOfterm = digitNumber(fib(i))
+        number += lenghtOfterm
+        if (number >= n){
+
+            return fib(i) / pow(10.0, (number - n).toDouble()).toInt() % 10
+
+        }
+    }
+    return -1
+}
+
+
+
+/*{
     /* var a:Int = 5
     var b:Int = 8
     var x:Int = a + b
@@ -407,6 +482,7 @@ fun fibSequenceDigit(n: Int): Int {
     }
  return yi
 }
+*/
 
 fun main (arg: Array<String>){
 
