@@ -78,20 +78,22 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int):Int{
 
-    if (kingX in 1..8 && kingY in 1..8 && rookX1 in 1..8 && rookX2 in 1..8 && rookY1 in 1..8 && rookY2 in 1..8) {
-        if ((rookX1 != rookX2 || rookY2 != rookY1) && (kingX != rookX1 || kingY != rookY1) && (kingX != rookX2 || kingY != rookY2)) {
-
-
-            if ((kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2)) return 3
-            if (kingX == rookX1 || kingY == rookY1) return 1
-            return if (kingX == rookX2 || kingY == rookY2) 2
-            else 0
-
+    if ((rookX1 != rookX2 || rookY2 != rookY1) && (kingX != rookX1 || kingY != rookY1) && (kingX != rookX2 || kingY != rookY2)) {
+        val rookOnethreat = (kingX == rookX1 || kingY == rookY1)
+        val rookTwotheat = (kingX == rookX2 || kingY == rookY2)
+        return when {
+            rookOnethreat && rookTwotheat -> 3
+            rookOnethreat -> 1
+            rookTwotheat -> 2
+            else -> 0
         }
     }
+    return -1
 
-return -2
 }
+/*if ((rookX1 != rookX2 || rookY2 != rookY1) && (kingX != rookX1 || kingY != rookY1) && (kingX != rookX2 || kingY != rookY2)) {
+    */
+
 
 /**
  * Простая
@@ -108,45 +110,18 @@ return -2
 
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
-                          bishopX: Int, bishopY: Int):Int {
-    if ( (kingX in 1..8 && kingY in 1..8 && rookX in 1..8 && rookY in 1..8 && bishopX in 1..8 && bishopY in 1..8)) return -1
-    if (  (((kingX == rookX && kingY != rookY)||(kingX != rookX && kingY == rookY)) && ((bishopX != rookX && bishopY == rookY) || (bishopY != rookY && bishopX == bishopX)))) return -1
+                          bishopX: Int, bishopY: Int):Int{
     val rookThreat = (((kingX == rookX && kingY != rookY)||(kingX != rookX && kingY == rookY)) && ((bishopX != rookX) || (bishopY != rookY)))
     val bishopThreat = (((Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY)) && ((bishopX != rookX) || (bishopY != rookY))))
-    if (rookThreat && bishopThreat) return 3
-    if (rookThreat) return 2
-    return if (bishopThreat) 1
-    else 0
-
-
-
-} /*  {
-
-     when (kingX in 1..8 && kingY in 1..8 && rookX in 1..8 && rookY in 1..8 && bishopX in 1..8 && bishopY in 1..8){
-          if (((kingX == rookX && kingY != rookY)||(kingX != rookX && kingY == rookY)) && ((bishopX != rookX) || (bishopY != rookY))){
-              if ((((Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY)) && ((bishopX != rookX) || (bishopY != rookY))))) return 3
-              else 1
-
-
-
-          }else if  ((((Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY)) && ((bishopX != rookX) || (bishopY != rookY))))){ return 2}->
-              else -> {
-              return 0
-              }
-
-
-
-
-
-
-      /*  (((kingX == rookX && kingY != rookY) || (kingX != rookX && kingY == rookY)) && (Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY))) -> 3
-        (((Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY)) && ((bishopX != rookX) || (bishopY != rookY)))) -> 2
-        (((kingX == rookX && kingY != rookY)||(kingX != rookX && kingY == rookY)) && ((bishopX != rookX) || (bishopY != rookY))) -> 1
-        else -> 0  */
-
+    return when {
+        rookThreat && bishopThreat -> 3
+        rookThreat -> 1
+        bishopThreat ->  2
+        else -> 0
     }
 
-}      */
+
+}
 
 /**
  * Простая
@@ -245,7 +220,7 @@ fun main(arg: Array<String>){
 
     val b = whichRookThreatens(1,2,3,4,5,6)
     val b1:String = when(b) {
-        -2 -> "Invalid position - Use values only between 1 and 8"
+        -1 -> "Invalid position"
         else -> "$b"
 
     }
