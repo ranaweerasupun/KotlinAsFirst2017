@@ -66,7 +66,19 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val months = listOf("января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря")
+    val parts = str.split(" ")
+    if(parts.size != 3 ) return ""
+    val day = twoDigitStr(parts[0].toInt())
+    val month = twoDigitStr(months.indexOf(parts[1])+1)
+    val year = parts[2]
+    return if ( month == "00" || day >"31"){
+        ""
+    } else {
+        String.format("%s.%s.%s",day,month,year)
+    }
+}
 
 /**
  * Средняя
@@ -75,7 +87,25 @@ fun dateStrToDigit(str: String): String = TODO()
  * Перевести её в строковый формат вида "15 июля 2016".
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val months = listOf("января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря")
+    val parts = digital.split(".")
+    if (parts.size != 3 ) return ""
+    try {
+        val day = parts[0].toInt().toString()
+        if (parts[1].toInt() !in 1..12) return ""
+        val month = months[parts[1].toInt() - 1]
+        val year = parts[2]
+        return if (day > "31") {
+            ""
+        } else {
+            String.format("%s %s %s", day, month, year)
+        }
+    }
+    catch (e:NumberFormatException){
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -89,7 +119,54 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val stringLength = phone.length
+    val mark = listOf("(", ")", "-", " ")
+    val in123 = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0")
+    var phoneNumber = ""
+    try {
+
+
+        if (phone[0] in in123.toString() + '+') {
+            phoneNumber += phone[0]
+        }
+        for (i in 1 until stringLength) {
+            when {
+                phone[i].toString() in in123 -> phoneNumber += phone[i]
+                phone[i].toString() in mark -> phoneNumber
+                else -> return ""
+            }
+
+
+        }
+        return phoneNumber
+    }
+    catch (e: StringIndexOutOfBoundsException){
+        return ""
+
+    }
+
+}
+
+/*
+    try {
+        for (i in 0..stringLength) {
+            val element = phone[i].toString()
+            if ((element !in mark) && (element in in123)) {
+                phoneNumber + element
+
+            }
+
+
+        }
+        return phoneNumber.toString()
+    }
+    catch (e: StringIndexOutOfBoundsException){
+        throw ""
+    }
+
+**/
+
 
 /**
  * Средняя
@@ -101,7 +178,20 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val validChar = " -%0123456789"
+    for (char in jumps) {
+        when (char) {
+            !in validChar -> return -1
+        }
+    }
+    val numbers = jumps.split(" ").filter { it != "-" && it != "%" }.map { it.toInt()}
+    return if (numbers.isEmpty()) -1
+    else numbers.max()!!
+
+}
+
+
 
 /**
  * Сложная
@@ -113,7 +203,37 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val validChar = " +-%0123456789"
+    val termsList = jumps.split(" ")
+    var heighest = 0
+    for (i in 0 until validChar.length){
+        if (validChar[i] !in validChar)
+        return -1
+    }
+    if ( termsList.isEmpty() || termsList.size % 2 != 0) return -1
+    return  try {
+        for (i in 0 until termsList.size step 2){
+            if (termsList[i].toInt() > heighest && "+" in termsList[i + 1]){
+                heighest = termsList[i].toInt()}
+
+        }
+       heighest
+
+    }
+    catch (e: NumberFormatException){
+        return -1
+    }
+
+
+
+
+}
+
+
+
+
+
 
 /**
  * Сложная
@@ -124,7 +244,108 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val terms = expression.split(" ")
+    val mark = "+-"
+
+    return try {
+        var value = 0
+        if (terms.size < 4)
+            when (terms[terms.size - 1]) {
+                "-" -> value = terms.first().toInt() - terms.last().toInt()
+                "+" -> value = terms.first().toInt() + terms.last().toInt()
+
+            }
+        value
+
+
+
+        if (terms.first() !in mark && terms.last() in mark && (terms.size - 1) % 4 == 0) {
+            value += terms.first().toInt()
+            for (i in 2 until terms.size step 3) {
+                when {
+                    terms[i - 1] == "-" -> value -= terms[i].toInt()
+                    terms[i - 1] == "+" -> value += terms[i].toInt()
+                    terms[i + 1] == "-" -> value -= terms[i + 2].toInt()
+                    terms[i + 1] == "+" -> value += terms[i + 2].toInt()
+
+                }
+
+
+            }
+             value
+        }
+
+        if (terms.first() !in mark && terms.last() in mark && (terms.size - 1) % 4 == 2) {
+            value += terms.first().toInt()
+            when (terms[terms.size - 1]) {
+                "-" -> value -= terms.last().toInt()
+                "+" -> value += terms.last().toInt()
+
+            }
+            for (i in 2..terms.size - 2 step 3) {
+                when {
+                    terms[i - 1] == "-" -> value -= terms[i].toInt()
+                    terms[i - 1] == "+" -> value += terms[i].toInt()
+                    terms[i + 1] == "-" -> value -= terms[i + 2].toInt()
+                    terms[i + 1] == "+" -> value += terms[i + 2].toInt()
+
+                }
+
+
+            }
+             value
+        }
+
+
+        if (terms.first() in mark && terms.last() in mark && terms.size % 4 == 0) {
+            for (i in 1 until terms.size step 3) {
+                when {
+                    terms[i - 1] == "-" -> value -= terms[i].toInt()
+                    terms[i - 1] == "+" -> value += terms[i].toInt()
+                    terms[i + 1] == "-" -> value -= terms[i + 2].toInt()
+                    terms[i + 1] == "+" -> value += terms[i + 2].toInt()
+
+                }
+
+
+            }
+             value
+
+
+        }
+
+       else {
+            when (terms[terms.size - 1]) {
+                "-" -> value -= terms.last().toInt()
+                "+" -> value += terms.last().toInt()
+
+            }
+            for (i in 1..terms.size - 2 step 3) when {
+                    terms[i - 1] == "-" -> value -= terms[i].toInt()
+                    terms[i - 1] == "+" -> value += terms[i].toInt()
+                    terms[i + 1] == "-" -> value -= terms[i + 2].toInt()
+                    terms[i + 1] == "+" -> {
+                        value += terms[i + 2].toInt()
+                    }
+
+                }
+             value
+
+
+        }
+
+
+    }
+    catch (e: IllegalArgumentException){
+        throw e
+    }
+
+
+
+}
+
+
 
 /**
  * Сложная
@@ -135,7 +356,22 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val words = str.toLowerCase().split(" ")
+    var index = 0
+    for (i in 1 until words.size){
+        try {
+
+            if (words[i - 1] == words[i]) return index
+            val wordLength = words[i-1].length
+            index += (wordLength + 1)
+        }catch (e: IndexOutOfBoundsException){ -1}
+    }
+    return index - 1
+
+
+
+}
 
 /**
  * Сложная
@@ -148,7 +384,27 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val list = description.split(";", " ")
+    val prices = mutableListOf<Double>()
+    for (i in 0 until list.size) {
+        prices.add(i, 0.0)
+    }
+    for (i in 0 until list.size) {
+        try {
+            prices.add(i, list[i].toDouble())
+        } catch (e: NumberFormatException) {
+        }
+    }
+
+    return if (list.size > 1) list[ prices.indexOf(prices.max()) - 1]
+    else list[ prices.indexOf(prices.max())]
+}
+
+
+
+
+
 
 /**
  * Сложная
@@ -158,12 +414,51 @@ fun mostExpensive(description: String): String = TODO()
  * Римские цифры: 1 = I, 4 = IV, 5 = V, 9 = IX, 10 = X, 40 = XL, 50 = L,
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: XXIII = 23, XLIV = 44, C = 100
- *
- * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int  {
+    if (roman.isEmpty()) return -1
+    val list2 = mutableListOf<Int>()
+    val list1 = roman.split("")
+    var sumOfterms = 0
+
+    for (i in 0 until list1.size) {
+        list2.add(i, 0)
+        try {
+            when {
+                list1[i] == "I" -> list2[i] = 1
+                list1[i] == "V" -> list2[i] = 5
+                list1[i] == "X" -> list2[i] = 10
+                list1[i] == "L" -> list2[i] = 50
+                list1[i] == "C" -> list2[i] = 100
+                list1[i] == "D" -> list2[i] = 500
+                list1[i] == "M" -> list2[i] = 1000
+            }
+        } catch (e: IllegalArgumentException) {
+            return -1
+        }
+    }
+
+    list2.removeAt(0)
+    list2.removeAt(list1.size - 2)
+    for (i in 0 until list2.size)
+        when {
+            list2[i] == 0 -> return -1
+            else -> {
+                when {
+                    i < list2.size - 1 && list2[i] < list2[i + 1] -> list2[i] = -list2[i]
+                    else -> list2[i] = list2[i]
+                }
+                sumOfterms += list2[i]
+            }
+        }
+
+
+    return sumOfterms
+}
 
 /**
+ * Вернуть -1, если roman не является корректным римским числом
+ *
  * Очень сложная
  *
  * Имеется специальное устройство, представляющее собой
