@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson6.task2
 
+import java.sql.SQLClientInfoException
+
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
  * Поэтому, обе координаты клетки (горизонталь row, вертикаль column) могут находиться в пределах от 1 до 8.
@@ -21,7 +23,13 @@ data class Square(val column: Int, val row: Int) {
      * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
      * Для клетки не в пределах доски вернуть пустую строку
      */
-    fun notation(): String = TODO()
+    fun notation(): String {
+        val v123 = listOf(1,2,3,4,5,6,7,8)
+        val abc = listOf("a","b","c","d","e","f","g","h")
+        return if (inside()) "${abc[v123.indexOf(column)]}$row"
+        else ""
+
+    }
 }
 
 /**
@@ -31,7 +39,20 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = TODO()
+fun square(notation: String): Square {
+    return try {
+        val v123String = listOf("1", "2", "3", "4", "5", "6", "7", "8")
+        val v123 = listOf(1, 2, 3, 4, 5, 6, 7, 8)
+        val abc = listOf("a", "b", "c", "d", "e", "f", "g", "h")
+        val notaColumn = v123[abc.indexOf(notation[0].toString())]
+        val notaRow = v123[v123String.indexOf(notation[1].toString())]
+        Square(notaColumn, notaRow)
+
+    } catch (e: IllegalArgumentException){
+        throw e
+
+    }
+}
 
 /**
  * Простая
@@ -56,7 +77,16 @@ fun square(notation: String): Square = TODO()
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int = TODO()
+fun rookMoveNumber(start: Square, end: Square): Int {
+    if ((start.column == end.column) && (start.row == end.row)) return 0
+    return if ((start.row == end.row) || (start.column == end.column)) 1
+    else 2
+
+
+
+
+
+}
 
 /**
  * Средняя
@@ -72,7 +102,11 @@ fun rookMoveNumber(start: Square, end: Square): Int = TODO()
  *          rookTrajectory(Square(3, 5), Square(8, 5)) = listOf(Square(3, 5), Square(8, 5))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun rookTrajectory(start: Square, end: Square): List<Square> {
+    if (rookMoveNumber(start,end) == 1) return listOf(start,end)
+    return if (rookMoveNumber(start,end) == 2) listOf(start,Square(start.column,end.row),end)
+    else listOf(start)
+}
 
 /**
  * Простая
@@ -97,7 +131,15 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
+fun bishopMoveNumber(start: Square, end: Square): Int {
+    return if (((start.column + start.row)%2 == (end.column + end.row)%2)){
+        if ((start.column == end.column) && (start.row == end.row)) 0
+        else if (Math.abs(end.column - start.column) == Math.abs(end.row - start.row)) 1
+        else 2
+
+    } else -1
+
+}
 
 /**
  * Сложная
@@ -117,7 +159,191 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square>  {
+    if (bishopMoveNumber(start,end) == 0) return listOf(start)
+    if (bishopMoveNumber(start,end) == 1) return listOf(start,end)
+    if (bishopMoveNumber(start,end) == -1) return emptyList()
+
+    val startValue = start.column + start.row
+    val endValue = end.column + end.row
+    if (startValue <= 9 && endValue <= 9){
+
+        val i = maxOf(startValue,endValue) - minOf(startValue,endValue)
+        return if (startValue - endValue > 0) listOf(start, Square(end.column + i/2,end.row + i/2),end)
+        else listOf(start, Square(start.column + i/2,start.row + i/2),end)
+
+
+
+    }else if (startValue > 9 && endValue > 9){
+        val i = maxOf(startValue,endValue) - minOf(startValue,endValue)
+        return if (endValue - startValue> 0) listOf(start, Square(end.column - i/2,end.row - i/2),end)
+        else listOf(start, Square(start.column - i/2,start.row - i/2),end)
+
+
+    } else {
+        val i = maxOf(startValue,endValue) - minOf(startValue,endValue)
+        val sumValues = startValue + endValue
+        return if (sumValues <= 18){
+            if (startValue - endValue > 0) listOf(start, Square(end.column + i/2,end.row + i/2),end)
+            else listOf(start, Square(start.column + i/2,start.row + i/2),end)
+        }else{
+            if (endValue - startValue> 0) listOf(start, Square(end.column - i/2,end.row - i/2),end)
+            else listOf(start, Square(start.column - i/2,start.row - i/2),end)
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+    /*{
+        val listofSqures = mutableListOf<Square>()
+        val listofSquresEnd = mutableListOf<Square>()
+        var SqureColumn = start.column
+        var SqureRow = start.row
+        var middle = Square(SqureColumn,SqureRow)
+        listofSqures.add(start)
+        if (start.column >= start.row) {
+            while (SqureRow != 1) {
+                SqureColumn -= 1
+                SqureRow -= 1
+                listofSqures.add(Square(SqureColumn, SqureRow))
+
+            }
+            while (SqureColumn != 8) {
+                SqureColumn += 1
+                SqureRow += 1
+                listofSqures.add(Square(SqureColumn, SqureRow))
+            }
+            while (SqureColumn != 1 || SqureRow != 8) {
+                SqureColumn -= 1
+                SqureRow += 1
+                listofSqures.add(Square(SqureColumn, SqureRow))
+            }
+            while (SqureColumn != 8 || SqureRow != 1) {
+                SqureColumn += 1
+                SqureRow -= 1
+                listofSqures.add(Square(SqureColumn, SqureRow))
+
+            }
+
+        } else {
+            while (SqureRow != 8) {
+                SqureColumn -= 1
+                SqureRow -= 1
+                listofSqures.add(Square(SqureColumn, SqureRow))
+
+            }
+            while (SqureColumn != 1) {
+                SqureColumn += 1
+                SqureRow += 1
+                listofSqures.add(Square(SqureColumn, SqureRow))
+            }
+            while (SqureColumn != 8 || SqureRow != 1) {
+                SqureColumn -= 1
+                SqureRow += 1
+                listofSqures.add(Square(SqureColumn, SqureRow))
+            }
+            while (SqureColumn != 1 || SqureRow != 8) {
+                SqureColumn += 1
+                SqureRow -= 1
+                listofSqures.add(Square(SqureColumn, SqureRow))
+
+            }
+
+        }
+
+        if (end.column >= end.row) {
+            while (SqureRow != 1) {
+                SqureColumn -= 1
+                SqureRow -= 1
+                if (Square(SqureColumn, SqureRow) in listofSqures) {
+                    return listOf(start,Square(SqureColumn,SqureRow),end)
+
+                }
+
+            }
+            while (SqureColumn != 8) {
+                SqureColumn += 1
+                SqureRow += 1
+                if (Square(SqureColumn, SqureRow) in listofSqures) {
+                    return listOf(start,Square(SqureColumn,SqureRow),end)
+
+                }
+
+            }
+            while (SqureColumn != 1 || SqureRow != 8) {
+                SqureColumn -= 1
+                SqureRow += 1
+                if (Square(SqureColumn, SqureRow) in listofSqures) {
+                    return listOf(start,Square(SqureColumn,SqureRow),end)
+
+                }
+
+            }
+            while (SqureColumn != 8 || SqureRow != 1) {
+                SqureColumn += 1
+                SqureRow -= 1
+                if (Square(SqureColumn, SqureRow) in listofSqures) {
+                    return listOf(start,Square(SqureColumn,SqureRow),end)
+
+                }
+
+            }
+
+        } else {
+            while (SqureRow != 8) {
+                SqureColumn -= 1
+                SqureRow -= 1
+                if (Square(SqureColumn, SqureRow) in listofSqures) {
+                    return listOf(start,Square(SqureColumn,SqureRow),end)
+
+                }
+
+            }
+            while (SqureColumn != 1) {
+                SqureColumn += 1
+                SqureRow += 1
+                if (Square(SqureColumn, SqureRow) in listofSqures) {
+                    return listOf(start,Square(SqureColumn,SqureRow),end)
+
+                }
+            }
+            while (SqureColumn != 8 || SqureRow != 1) {
+                SqureColumn -= 1
+                SqureRow += 1
+                if (Square(SqureColumn, SqureRow) in listofSqures) {
+                    return listOf(start,Square(SqureColumn,SqureRow),end)
+
+                }
+            }
+            while (SqureColumn != 1 || SqureRow != 8) {
+                SqureColumn += 1
+                SqureRow -= 1
+                if (Square(SqureColumn, SqureRow) in listofSqures) {
+                    return listOf(start, Square(SqureColumn,SqureRow),end)
+
+                }
+
+            }
+
+        }
+    }
+
+
+
+
+*/
+
+
+
+}
 
 /**
  * Средняя
@@ -139,7 +365,45 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: kingMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
-fun kingMoveNumber(start: Square, end: Square): Int = TODO()
+fun kingMoveNumber(start: Square, end: Square): Int {
+    val end_StartColumn = Math.abs(start.column - end.column)
+    val end_StartRow = Math.abs(start.row - end.row)
+    if (end_StartColumn < end_StartRow) {
+
+        return if(start.column < end.column) {
+            val endDiagonal = Square(start.column + end_StartColumn, start.row + end_StartColumn)
+            end_StartColumn + Math.abs(endDiagonal.row - end.row)
+
+        }else {
+            val endDiagonal = Square(start.column - end_StartColumn , start.row - end_StartColumn)
+            end_StartColumn + Math.abs(endDiagonal.row - end.row)
+
+        }
+
+    } else if (end_StartColumn > end_StartRow){
+
+        return if (start.row < end.row){
+            val endDiagonal = Square(start.column + end_StartRow, start.row + end_StartRow)
+            end_StartRow + Math.abs(endDiagonal.column - end.column)
+
+
+        }else {
+            val endDiagonal = Square(start.column - end_StartRow, start.row - end_StartRow)
+            end_StartRow + Math.abs(endDiagonal.column - end.column)
+
+
+        }
+
+    } else return end_StartColumn
+
+
+
+
+
+
+
+
+}
 
 /**
  * Сложная
@@ -155,7 +419,88 @@ fun kingMoveNumber(start: Square, end: Square): Int = TODO()
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun kingTrajectory(start: Square, end: Square): List<Square> {
+    if (kingMoveNumber(start,end) == 0) return listOf(start)
+    val end_StartColumn = Math.abs(start.column - end.column)
+    val end_StartRow = Math.abs(start.row - end.row)
+    val listofSqures = mutableListOf(start)
+    if (end_StartColumn < end_StartRow) {
+
+        if(start.column < end.column) {
+            val endDiagonal = Square(start.column + end_StartColumn, start.row + end_StartColumn)
+            for (i in 1..end_StartColumn){
+                val squreInPath1 = Square(start.column + i, start.row + i)
+                listofSqures.add(squreInPath1)
+            }
+            for (i in 1..end.row-endDiagonal.row){
+                val squreInPath2 = Square(endDiagonal.column, endDiagonal.row + i)
+                listofSqures.add(squreInPath2)
+            }
+
+            return listofSqures
+
+
+        }else {
+            val endDiagonal = Square(start.column - end_StartColumn , start.row - end_StartColumn)
+            for (i in 1..end_StartColumn){
+                val squreInPath1 = Square(start.column - i, start.row - i)
+                listofSqures.add(squreInPath1)
+            }
+            for (i in 1..endDiagonal.row-end.row){
+                val squreInPath2 = Square(endDiagonal.row - i, endDiagonal.column)
+                listofSqures.add(squreInPath2)
+            }
+
+            return listofSqures
+
+        }
+
+    } else if (end_StartColumn > end_StartRow){
+
+        return if (start.row < end.row){
+            val endDiagonal = Square(start.column + end_StartRow, start.row + end_StartRow)  //end of the digonal tajectory
+            for (i in 1..end_StartRow){
+                val squreInPath1 = Square(start.column + i, start.row +i)
+                listofSqures.add(squreInPath1)
+            }
+            for (i in 1..end.column-endDiagonal.column){
+                val squreInPath2 = Square(endDiagonal.column + i, endDiagonal.row)
+                listofSqures.add(squreInPath2)
+            }
+
+            listofSqures
+
+
+        }else {
+            val endDiagonal = Square(start.column - end_StartRow, start.row - end_StartRow)
+            for (i in 1..end_StartRow){
+                val squreInPath1 = Square(start.column - i, start.row - i)
+                listofSqures.add(squreInPath1)
+            }
+            for (i in 1..end.column-endDiagonal.column){
+                val squreInPath2 = Square(endDiagonal.column - i, endDiagonal.row)
+                listofSqures.add(squreInPath2)
+            }
+
+            listofSqures
+
+        }
+
+    } else {
+        if (start.row < end.row){
+        val endDiagonal = Square(start.column + end_StartRow, start.row + end_StartRow)  //end of the digonal tajectory
+        for (i in 1..end_StartRow) {
+            val squreInPath1 = Square(start.column + i, start.row + i)
+            listofSqures.add(squreInPath1)
+
+        }
+
+    }
+        return listofSqures
+    }
+
+
+}
 
 /**
  * Сложная
