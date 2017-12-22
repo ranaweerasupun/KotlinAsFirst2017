@@ -1,5 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson2.task1
+
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import lesson4.task1.abs
@@ -34,15 +36,14 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String{
-   if (age in 1..199) {
-       if (age % 10 == 1 && age % 100 != 11) return "$age год"
-       if ((age % 10 == 2 || age % 10 == 3 || age % 10 == 4) && (age % 100 != 12 && age % 100 != 13 && age % 100 != 14)) return "$age года"
+fun ageDescription(age: Int): String {
+    if (age in 1..199) {
+        if (age % 10 == 1 && age % 100 != 11) return "$age год"
+        if ((age % 10 == 2 || age % 10 == 3 || age % 10 == 4) && (age % 100 != 12 && age % 100 != 13 && age % 100 != 14)) return "$age года"
+        else return "$age лет"
 
-       else return "$age лет"
-
-   }
-return "Not an age"
+    }
+    return "Not an age"
 }
 
 /**
@@ -55,10 +56,10 @@ return "Not an age"
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
                    t3: Double, v3: Double): Double {
-    val halfDistance=(v1*t1+v2*t2+v3*t3)/2
+    val halfDistance = (v1 * t1 + v2 * t2 + v3 * t3) / 2
     return when {
         halfDistance <= v1 * t1 -> halfDistance / v1
-        halfDistance <= ((v1 * t1)+(v2 * t2)) -> t1 + ( (halfDistance - v1 * t1) / v2)
+        halfDistance <= ((v1 * t1) + (v2 * t2)) -> t1 + ((halfDistance - v1 * t1) / v2)
         else -> t1 + t2 + ((halfDistance - (v1 * t1) - (v2 * t2)) / v3)
     }
 
@@ -76,15 +77,15 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int):Int{
+                       rookX2: Int, rookY2: Int): Int {
 
     if ((rookX1 != rookX2 || rookY2 != rookY1) && (kingX != rookX1 || kingY != rookY1) && (kingX != rookX2 || kingY != rookY2)) {
-        val rookOnethreat = (kingX == rookX1 || kingY == rookY1)
-        val rookTwotheat = (kingX == rookX2 || kingY == rookY2)
+        val rookOne = (kingX == rookX1 || kingY == rookY1)
+        val rookTwo = (kingX == rookX2 || kingY == rookY2)
         return when {
-            rookOnethreat && rookTwotheat -> 3
-            rookOnethreat -> 1
-            rookTwotheat -> 2
+            rookOne && rookTwo -> 3
+            rookOne -> 1
+            rookTwo -> 2
             else -> 0
         }
     }
@@ -107,16 +108,15 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
  */
 
 
-
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
-                          bishopX: Int, bishopY: Int):Int{
-    val rookThreat = (((kingX == rookX && kingY != rookY)||(kingX != rookX && kingY == rookY)) && ((bishopX != rookX) || (bishopY != rookY)))
+                          bishopX: Int, bishopY: Int): Int {
+    val rookThreat = (((kingX == rookX && kingY != rookY) || (kingX != rookX && kingY == rookY)) && ((bishopX != rookX) || (bishopY != rookY)))
     val bishopThreat = (((Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY)) && ((bishopX != rookX) || (bishopY != rookY))))
     return when {
         rookThreat && bishopThreat -> 3
         rookThreat -> 1
-        bishopThreat ->  2
+        bishopThreat -> 2
         else -> 0
     }
 
@@ -132,35 +132,35 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    var x:Double;
+    var x: Double;
     var a = a
     var b = b
     var c = c
-    if (c > b){
-        x=c
-        c=b
-        b=x
-        x=0.0
+    if (c > b) {
+        x = c
+        c = b
+        b = x
+        x = 0.0
     }
-    if (b > a){
-        x=b
-        b=a
-        a=x
-        x=0.0
+    if (b > a) {
+        x = b
+        b = a
+        a = x
+        x = 0.0
     }
-    if (c > a){
-        x=c
-        c=a
-        a=x
-        x=0.0
+    if (c > a) {
+        x = c
+        c = a
+        a = x
+        x = 0.0
     }
-    if (b-c<a && a<b+c|| a-b<c && a+b >c || a-c<b && a+c >b){
-        val k = (c*c)+(b*b)
-        val l = (a*a)
+    if (b - c < a && a < b + c || a - b < c && a + b > c || a - c < b && a + c > b) {
+        val k = (c * c) + (b * b)
+        val l = (a * a)
         when {
-            k==l -> return 1
-            k<l -> return 2
-            k>l -> return 0
+            k == l -> return 1
+            k < l -> return 2
+            k > l -> return 0
             else -> {
             }
         }
@@ -171,14 +171,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
 }
 
 
+/*if(cb < sqr(a) || ca < sqr(b) || ab < sqr(c)) return 2
+else if (cb == sqr(a) || ca == sqr(b) || ab == sqr(c)) return 1
+else if (cb > sqr(a) || ca > sqr(b) || ab > sqr(c)) return 0
+else return -1
 
-
-    /*if(cb < sqr(a) || ca < sqr(b) || ab < sqr(c)) return 2
-    else if (cb == sqr(a) || ca == sqr(b) || ab == sqr(c)) return 1
-    else if (cb > sqr(a) || ca > sqr(b) || ab > sqr(c)) return 0
-    else return -1
-
-    */
+*/
 
 
 
@@ -193,12 +191,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if (b >= a && d >= c){
+    if (b >= a && d >= c) {
         return when {
-            d >= b && c in a..b -> b-c
-            d in a..b && a >= c -> d-a
-            c in a..b && d in a..b -> d-c
-            a in c..d && b in c..d -> b-a
+            d >= b && c in a..b -> b - c
+            d in a..b && a >= c -> d - a
+            c in a..b && d in a..b -> d - c
+            a in c..d && b in c..d -> b - a
             else -> -1
         }
 
@@ -208,31 +206,31 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
 }
 
 
+fun main(arg: Array<String>) {
 
-fun main(arg: Array<String>){
-
-   /* val p = segmentLength(5,6,8,4)
-    println("$p")*/
-    val time= timeForHalfWay(3.0,2.0,1.0,5.0,4.0,1.0)
+    /* val p = segmentLength(5,6,8,4)
+     println("$p")*/
+    val time = timeForHalfWay(3.0, 2.0, 1.0, 5.0, 4.0, 1.0)
     println("Time for half way -> $time")
     val a = ageDescription(53)
     println("$a")
 
-    val b = whichRookThreatens(1,2,3,4,5,6)
-    val b1:String = when(b) {
+    val b = whichRookThreatens(1, 2, 3, 4, 5, 6)
+    val b1: String = when (b) {
         -1 -> "Invalid position"
         else -> "$b"
 
     }
     println("$b1")
-    val rb= rookOrBishopThreatens(5,4,3,7,1,8)
-    val rb1:String = when(rb) {
+    val rb = rookOrBishopThreatens(5, 4, 3, 7, 1, 8)
+    val rb1: String = when (rb) {
         5 -> "Invalid position - Use values only between 1 and 8"
-     else -> "$rb"}
+        else -> "$rb"
+    }
     println("$rb1")
-    val t = triangleKind(5.0,3.0,4.0)
+    val t = triangleKind(5.0, 3.0, 4.0)
     println("TriangleKind -> $t")
-    val seg = segmentLength(2,9,1,3)
+    val seg = segmentLength(2, 9, 1, 3)
     if (seg == -2) println("segmentLength -> Invalid number") else println("segmentLength = $seg")
 
 }
