@@ -1,9 +1,9 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
-import sun.invoke.empty.Empty
 import java.lang.Math.pow
 import java.lang.Math.sqrt
 
@@ -115,9 +115,6 @@ fun abs(v: List<Double>): Double {
     val sumCoefficients = coefficientsList.sum()
     return sqrt(sumCoefficients)
 
-
-
-
 }
 
 
@@ -127,11 +124,9 @@ fun abs(v: List<Double>): Double {
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double {
-    if(list.isEmpty()) return 0.0
-    val sumOfterms = list.sum()
-    return (sumOfterms / list.size)
-
-
+    if (list.isEmpty()) return 0.0
+    val sum = list.sum()
+    return (sum / list.size)
 }
 
 /**
@@ -144,20 +139,13 @@ fun mean(list: List<Double>): Double {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
-    var element:Double
-    if(list is Empty){ return list }
-
-    for (i in 0 until list.size){
-        element = list[i] - mean
+    if (list.isEmpty()) return list
+    for (i in 0 until list.size) {
+        val element = list[i] - mean
         list[i] = element
 
-
     }
-
-
-return list
-
-
+    return list
 }
 
 /**
@@ -169,17 +157,11 @@ return list
  */
 fun times(a: List<Double>, b: List<Double>): Double {
     if (a.isEmpty() && b.isEmpty()) return 0.0
-    val listofMultipies = mutableListOf<Double>()
-
-    for (i in 0..a.size-1 ){
-        listofMultipies.add(a[i] * b[i])
-
-
-
+    val list = mutableListOf<Double>()
+    for (i in 0 until a.size) {
+        list.add(a[i] * b[i])
     }
-
-    return listofMultipies.sum()
-
+    return list.sum()
 }
 
 /**
@@ -191,18 +173,12 @@ fun times(a: List<Double>, b: List<Double>): Double {
  * Значение пустого многочлена равно 0.0 при любом x.
  */
 fun polynom(p: List<Double>, x: Double): Double {
-    val setofTerms = mutableListOf<Double>()
-    for(i in 0..p.size-1){
-        val newElement = p[i] * pow(x,i.toDouble())
-        setofTerms.add(newElement)
-
-
+    val list = mutableListOf<Double>()
+    for (i in 0 until p.size) {
+        val newElement = p[i] * pow(x, i.toDouble())
+        list.add(newElement)
     }
-
-
-return setofTerms.sum()
-
-
+    return list.sum()
 }
 
 /**
@@ -216,18 +192,11 @@ return setofTerms.sum()
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    for (i in 0 until list.size-1){
-        val elementi = list[i] + list[i+1]
-        list[i+1] = elementi
-
-
-
+    for (i in 0 until list.size - 1) {
+        val element = list[i] + list[i + 1]
+        list[i + 1] = element
     }
-
-
-return list
-
-
+    return list
 }
 
 /**
@@ -237,7 +206,21 @@ return list
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    val factors = mutableListOf<Int>()
+    var new_n = n
+    var factor = 2
+    while (new_n > 1) {
+        when {
+            new_n % factor == 0 -> {
+                factors.add(factor)
+                new_n /= factor
+            }
+            else -> factor++
+        }
+    }
+    return factors
+}
 
 /**
  * Сложная
@@ -256,39 +239,24 @@ fun factorizeToString(n: Int): String = TODO()
  */
 fun convert(n: Int, base: Int): List<Int> {
     var m = n
-    val listDigits = mutableListOf<Int>()
-    val listDigits2 = mutableListOf<Int>()
+    val list = mutableListOf<Int>()
+    val digits = mutableListOf<Int>()
     if (n < base) {
-        listDigits.add(n)
-        return listDigits
-
-
-    }else {
-
-
+        list.add(n)
+        return list
+    } else {
         while (m >= base) {
             val digit = m % base
-            listDigits.add(digit)
-
+            list.add(digit)
             m /= base
-
         }
-        listDigits.add(m)
+        list.add(m)
     }
-
-
-    for (i in 0 until listDigits.size){
-        val element = listDigits[listDigits.size-1-i]
-        listDigits2.add(element)
-
-
+    for (i in 0 until list.size) {
+        val element = list[list.size - 1 - i]
+        digits.add(element)
     }
-
-
-
-    return listDigits2
-
-
+    return digits
 }
 
 /**
@@ -300,33 +268,23 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    val alphabet = mutableListOf<String>()
+    val terms = convert(n, base)
     val value = mutableListOf<String>()
-    val ABCD = listOf("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z")
-    val IntABCD = listOf(10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37)
-    var m = n
-    while (m != 0) {
-        val element = m % base
-        if( element < 10){
-            value.add(element.toString())
-
-
-        }else
-        value.add(ABCD[IntABCD.indexOf(element)])
-
-        m /= base
-
-
+    val abcd = "abcdefghijklmnopqrstuvwxyz"
+    var number = ""
+    for (i in 0 until terms.size) {
+        val term = terms[i]
+        if (term < 10) value.add("$term")
+        else value.add(abcd[term - 10].toString())
     }
-    for(i in 0 until value.size){
-        val eleList1 = value[value.size-1-i]
-        alphabet.add(eleList1)
-
+    for (i in 0 until value.size) {
+        number += value[i]
     }
+    return number
 
-
-    return alphabet.joinToString(separator = "",prefix = "",postfix = "")  //using jointoString
 }
+
+
 
 /**
  * Средняя
@@ -337,19 +295,20 @@ fun convertToString(n: Int, base: Int): String {
  */
 fun decimal(digits: List<Int>, base: Int): Int {
     val listofValues = mutableListOf<Int>()
-    for (i in 0 until digits.size){
+    for (i in 0 until digits.size) {
         val element = digits[i]
-        val values = (element * pow(base.toDouble(),digits.size.toDouble()-1-i)).toInt()
+        val values = (element * powInt(base, digits.size - 1 - i))
         listofValues.add(values)
-
-
     }
-
-
-    return  listofValues.sum()
-
-
+    return listofValues.sum()
 }
+fun powInt(b: Int, k: Int): Int {
+    var output = 1
+    for (i in 1..k)
+        output *= b
+    return output
+}
+
 
 /**
  * Сложная
@@ -361,29 +320,19 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val ABCD = listOf("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z")
-    val IntABCD = listOf(10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37)
-    val Int123 = listOf(1,2,3,4,5,6,7,8,9,0)
-    val string123 = listOf("1","2","3","4","5","6","7","8","9","0")
+    val ABCD = "abcdefghijklmnopqrstuvwxyz"
     val number = mutableListOf<Int>()
-    for (i in 0 until str.length){
-        val character =(str[str.length-1-i]).toString()
-        if (character in ABCD){
-           val value = IntABCD[ABCD.indexOf(character)] *( pow(base.toDouble(), i.toDouble())).toInt()
+    for (i in 0 until str.length) {
+        val character = (str[str.length - 1 - i]).toString()
+        if (character in ABCD) {
+            val value = (ABCD.indexOf(character) + 10) * (powInt(base, i))
+            number.add(value)
+        } else {
+            val value = character.toInt() * (powInt(base, i))
             number.add(value)
         }
-        else if (character in string123 ){
-            val value = Int123[string123.indexOf(character)] * ( pow(base.toDouble(), i.toDouble())).toInt()
-            number.add(value)
-
-        }
-
-
     }
-
-return number.sum()
-
-
+    return number.sum()
 }
 
 /**
@@ -394,40 +343,35 @@ return number.sum()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String  {
+fun roman(n: Int): String {
     val listofAll = mutableListOf<String>()
     val listofDigits = mutableListOf<String>()
-    val mainList = listOf<String>("I","IV","V","IX","X","XL","L","XC","C","CD","D","CM","M")
-    val subList = listOf<String>("II","III","VI","VII","VIII","XX","XXX","LX","LXX","LXXX","CC","CCC","DC","DCC","DCCC","MM","MMM")
-    val IntmainList = listOf<Int>(1,4,5,9,10,40,50,90,100,400,500,900,1000)
-    val IntsubList = listOf<Int>(2,3,6,7,8,20,30,60,70,80,200,300,600,700,800,2000,3000)
+    val mainList = listOf<String>("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
+    val subList = listOf<String>("II", "III", "VI", "VII", "VIII", "XX", "XXX", "LX", "LXX", "LXXX", "CC", "CCC", "DC", "DCC", "DCCC", "MM", "MMM")
+    val IntmainList = listOf<Int>(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
+    val IntsubList = listOf<Int>(2, 3, 6, 7, 8, 20, 30, 60, 70, 80, 200, 300, 600, 700, 800, 2000, 3000)
     var m = n
-    while (m != 0){
+    var number = ""
+    while (m != 0) {
         var p = 10
         val value = m % p
-        if (value in IntmainList){
+        if (value in IntmainList) {
             listofAll.add(mainList[IntmainList.indexOf(value)])
 
-        }else if(value in IntsubList){
+        } else if (value in IntsubList) {
             listofAll.add(subList[IntsubList.indexOf(value)])
-
-
         }
         m -= value
         p *= 10
-
-
-
     }
-    for (i in 0 until listofAll.size){
-        val digit = listofAll[listofAll.size-1-i]
+    for (i in 0 until listofAll.size) {
+        val digit = listofAll[listofAll.size - 1 - i]
         listofDigits.add(digit)
     }
-
-
-
-return listofDigits.joinToString(separator = "",prefix = "",postfix = "")   //using jointoString
-
+    for (i in 0 until listofDigits.size) {
+        number += listofDigits[i]
+    }
+    return number
 
 }
 
@@ -441,21 +385,17 @@ return listofDigits.joinToString(separator = "",prefix = "",postfix = "")   //us
 fun russian(n: Int): String = TODO()
 
 
-fun main (arg: Array<String>){
+fun main(arg: Array<String>) {
     val b = sqRoots(25.0)
     println("$b")
-    val d = biRoots(1.0,5.0,6.0)
+    val d = biRoots(1.0, 5.0, 6.0)
     println("$d")
-   val v = negativeList(listOf(1,-5,4))
+    val v = negativeList(listOf(1, -5, 4))
     println("$v")
-    val f = invertPositives(mutableListOf(10,-6,5))
+    val f = invertPositives(mutableListOf(10, -6, 5))
     println("$f")
     val roma = roman(645)
     println("$roma")
-
-
-
-
 
 
 }
