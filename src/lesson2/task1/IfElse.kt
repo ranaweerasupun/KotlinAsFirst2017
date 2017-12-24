@@ -111,12 +111,12 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    val rookThreat = (((kingX == rookX && kingY != rookY) || (kingX != rookX && kingY == rookY)) && ((bishopX != rookX) || (bishopY != rookY)))
-    val bishopThreat = (((Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY)) && ((bishopX != rookX) || (bishopY != rookY))))
+    val rookThreat = (kingX == rookX && kingY != rookY) || (kingX != rookX && kingY == rookY)
+    val bishopThreat = (Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY))
     return when {
-        rookThreat && bishopThreat -> 3
-        rookThreat -> 1
-        bishopThreat -> 2
+        rookThreat && bishopThreat && ((bishopX != rookX) || (bishopY != rookY)) -> 3
+        rookThreat && ((bishopX != rookX) || (bishopY != rookY)) -> 1
+        bishopThreat && ((bishopX != rookX) || (bishopY != rookY)) -> 2
         else -> 0
     }
 
@@ -132,29 +132,20 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    var x: Double;
     var a = a
     var b = b
     var c = c
-    if (c > b) {
-        x = c
-        c = b
-        b = x
-        x = 0.0
+    val max = maxOf(a, b, c)
+    val min = minOf(a, b, c)
+    when {
+        max != a && min != a -> b = a
+        max != c && min != c -> b = c
+        max != b && min != b -> b = b
     }
-    if (b > a) {
-        x = b
-        b = a
-        a = x
-        x = 0.0
-    }
-    if (c > a) {
-        x = c
-        c = a
-        a = x
-        x = 0.0
-    }
-    if (b - c < a && a < b + c || a - b < c && a + b > c || a - c < b && a + c > b) {
+    a = max
+    c = min
+
+    if ((b - c < a && a < b + c) || (a - b < c && a + b > c) || (a - c < b && a + c > b)) {
         val k = (c * c) + (b * b)
         val l = (a * a)
         when {
@@ -166,19 +157,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
         }
     }
     return -1
-
-
 }
-
-
-/*if(cb < sqr(a) || ca < sqr(b) || ab < sqr(c)) return 2
-else if (cb == sqr(a) || ca == sqr(b) || ab == sqr(c)) return 1
-else if (cb > sqr(a) || ca > sqr(b) || ab > sqr(c)) return 0
-else return -1
-
-*/
-
-
 
 
 
